@@ -13,7 +13,7 @@ public class Main {
         options = myscanner.nextLine();
 
         if (options.equalsIgnoreCase("D")){
-            System.out.println();
+            System.out.println(hello);
         }else if (options.equalsIgnoreCase("p")){
             System.out.println();
         }else if (options.equalsIgnoreCase("L")){
