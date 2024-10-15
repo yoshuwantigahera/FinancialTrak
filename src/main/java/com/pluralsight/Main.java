@@ -12,6 +12,8 @@ import java.util.Scanner;
 
 //review filereaderandwriter to throw out or display person's info
 public class Main {
+
+    //dang code
 //    String date;
 //    String time;
 //    String description;
