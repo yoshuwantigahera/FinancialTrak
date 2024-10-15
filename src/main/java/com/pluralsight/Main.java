@@ -22,47 +22,52 @@ public class Main {
     static Scanner myscanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
-        File file = new File("transactions.csv");
 
-        try {
-//
-            if (file.createNewFile()) {
-                System.out.println("file created: " + file.getName());
-            }
-            // Reading from the file
-            try (Scanner scanner = new Scanner(file)) {
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    System.out.println(line); // Display the content
-                }
-            }
-
-
-
-        } catch (IOException e) {
-            System.out.println("An error occurred");
-            e.printStackTrace();
-        }
-
-
-        String options;
-        System.out.println("Good afternoon what would you like to do?"); //Later will add if time is am print more if it is pm print good afternoon
-        System.out.println("D) Add Deposit \nP) Make payment (Debit) \nL) Ledger \nX) Exit");
-        options = myscanner.nextLine();
-
-        if (options.equalsIgnoreCase("D")) {
-            addDeposit();
-        } else if (options.equalsIgnoreCase("P")) {
-            makePayment();
-        } else if (options.equalsIgnoreCase("L")) {
-            Ledger();
-        } else if (options.equalsIgnoreCase("X")) {
-            System.out.println("Exiting... Have a great day");
-        }
-
-
-//                }
+        displayMenu();
     }
+
+
+     public static void displayMenu() throws IOException {
+
+         String options;
+         System.out.println("Good afternoon what would you like to do?"); //Later will add if time is am print more if it is pm print good afternoon
+         System.out.println("D) Add Deposit \nP) Make payment (Debit) \nL) Ledger \nX) Exit");
+         options = myscanner.nextLine();
+
+         if (options.equalsIgnoreCase("D")) {
+             addDeposit();
+         } else if (options.equalsIgnoreCase("P")) {
+             makePayment();
+         } else if (options.equalsIgnoreCase("L")) {
+             Ledger();
+         } else if (options.equalsIgnoreCase("X")) {
+             System.out.println("Exiting... Have a great day");
+         }
+     }
+
+
+
+        public static void writeToCSV() {
+            File file = new File("transactions.csv");
+
+            try {
+                if (file.createNewFile()) {
+                    System.out.println("file created: " + file.getName());
+                }
+                // Reading from the file
+                try (Scanner scanner = new Scanner(file)) {
+                    while (scanner.hasNextLine()) {
+                        String line = scanner.nextLine();
+                        System.out.println(line); // Display the content
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("An error occurred");
+                e.printStackTrace();
+            }
+    }
+
+
     public static void makePayment () throws IOException {
         System.out.println("How much of your balance would you like to pay now: ");
         double payment = myscanner.nextDouble();
@@ -76,9 +81,11 @@ public class Main {
         int cvv = myscanner.nextInt();
         myscanner.nextLine();
         //-------------------------------------------------------------------------------------------
-        String cardinformation = payment + "|" + cardInfo + "|" + expirationDate;
-        BufferedWriter cw = new BufferedWriter(new FileWriter("transcations.csv", true));
+        String cardinformation = cardInfo + "|" + payment + "|" + expirationDate;
+        BufferedWriter cw = new BufferedWriter(new FileWriter("transactions.csv", true));
+        cw.newLine();
         cw.write(cardinformation);
+        cw.newLine();
         cw.close();
     }
 
@@ -110,7 +117,7 @@ public class Main {
         ledgerOptions = myscanner.nextLine();
 
         if (ledgerOptions.equalsIgnoreCase("A")) {
-            System.out.println();
+            displayAll();
         } else if (ledgerOptions.equalsIgnoreCase("D")) {
             allDeposits();
         } else if (ledgerOptions.equalsIgnoreCase("P")) {
@@ -122,6 +129,23 @@ public class Main {
         }
     }
 
+    private static void displayAll (){
+        File file = new File("transactions.csv");
+
+            try (Scanner scanner = new Scanner(file)) {
+                System.out.println("All Transactions: ");
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    System.out.println(line);
+                }
+            } catch (IOException e) {
+                System.out.println("An error occurred while reading transactions.");
+                e.printStackTrace();
+            }
+
+        
+    }
+
     private static void allDeposits() {
         File file = new File("transactions.csv");
 
@@ -131,8 +155,8 @@ public class Main {
                 String line = scanner.nextLine();
                 String[] fields = line.split("\\|"); // Split by the delimiter
                 if (fields.length > 4) { // Check if there are enough fields
-                    String amountStr = fields[fields.length - 1]; // Last field is the amount
-                    double amount = Double.parseDouble(amountStr);
+                    String amountInString = fields[fields.length - 1]; // Last field is the amount
+                    double amount = Double.parseDouble(amountInString);
                     if (amount > 0) { // Check if the amount is a deposit
                         System.out.println(line);
                     }
