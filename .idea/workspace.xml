@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bb054a78-c5e8-4fd2-b401-48c8c0ec0061" name="Changes" comment="comment">
+    <list default="true" id="bb054a78-c5e8-4fd2-b401-48c8c0ec0061" name="Changes" comment="changed transcation name and add everything to one file. also displays all enteries now">
+      <change afterPath="$PROJECT_DIR$/FinancialTransactionsCLI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pluralsight/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pluralsight/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pluralsight/Search.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pluralsight/Search.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/transactions.csv" beforeDir="false" afterPath="$PROJECT_DIR$/transactions.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transcations.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +98,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729013260474</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="changed transcation name and add everything to one file. also displays all enteries now">
+      <option name="closed" value="true" />
+      <created>1729031429138</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1729031429138</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -115,6 +124,7 @@
     <MESSAGE value="Added options to what they would like to do also included the class search" />
     <MESSAGE value="My git commit wasn't working for 3 days and I couldnt save  anything. the git.config was acting up it basically deleted itself, no idea whyyyyyyyyyy." />
     <MESSAGE value="comment" />
-    <option name="LAST_COMMIT_MESSAGE" value="comment" />
+    <MESSAGE value="changed transcation name and add everything to one file. also displays all enteries now" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed transcation name and add everything to one file. also displays all enteries now" />
   </component>
 </project>
