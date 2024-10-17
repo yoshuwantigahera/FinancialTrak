@@ -132,7 +132,7 @@ public class Main {
         if (reportOption.equals("1")) {
             searchByMonth();
         } else if (reportOption.equals("2")) {
-
+            searchPreviousMonth();
         } else if (reportOption.equals("3")) {
 
         } else if (reportOption.equals("4")) {
@@ -191,6 +191,7 @@ public class Main {
             e.printStackTrace();
         }
     }
+
     private static void searchByMonth() {
         System.out.print("Enter year (YYYY): ");
         int year = myscanner.nextInt();
@@ -207,7 +208,6 @@ public class Main {
                 String line = scanner.nextLine();
                 String[] fields = line.split("\\|");
 
-                // Check if the transaction date matches the specified month and year
                 if (fields.length > 0) {
                     try {
                         LocalDate transactionDate = LocalDate.parse(fields[0]);
@@ -235,6 +235,54 @@ public class Main {
             }
         }
     }
+
+    private static void searchPreviousMonth() {
+        LocalDate today = LocalDate.now();
+        LocalDate firstDayOfCurrentMonth = today.withDayOfMonth(1);
+        LocalDate lastMonth = firstDayOfCurrentMonth.minusMonths(1);
+
+        int year = lastMonth.getYear();
+        int month = lastMonth.getMonthValue();
+
+        System.out.println("Searching for transactions for " + month + "/" + year + "...");
+
+        File file = new File("transactions.csv");
+        List<String> filteredTransactions = new ArrayList<>();
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] fields = line.split("\\|");
+
+                if (fields.length > 0) {
+                    try {
+                        LocalDate transactionDate = LocalDate.parse(fields[0]);
+                        if (transactionDate.getYear() == year && transactionDate.getMonthValue() == month) {
+                            filteredTransactions.add(line);
+                        }
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Error parsing date: " + fields[0]);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading transactions.");
+            e.printStackTrace();
+            return;
+        }
+
+        // Display the results
+        if (filteredTransactions.isEmpty()) {
+            System.out.println("No transactions found for the previous month.");
+        } else {
+            System.out.println("Transactions for " + month + "/" + year + ":");
+            for (String transaction : filteredTransactions) {
+                System.out.println(transaction);
+            }
+        }
+    }
+
+
 
     private static void allDeposits() {
         File file = new File("transactions.csv");
