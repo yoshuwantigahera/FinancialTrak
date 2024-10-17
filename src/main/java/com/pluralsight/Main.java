@@ -6,19 +6,12 @@ import java.io.*;
 import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.Scanner;
 
-//review filereaderandwriter to throw out or display person's info
 public class Main {
-
-    //dang code
-//    String date;
-//    String time;
-//    String description;
-    String vendor;
-    //    String amount;
     static Scanner myscanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
@@ -119,19 +112,43 @@ public class Main {
 
         if (ledgerOptions.equalsIgnoreCase("A")) {
 
-
         } else if (ledgerOptions.equalsIgnoreCase("D")) {
             allDeposits();
 //            sortTransactionsByDate();
         } else if (ledgerOptions.equalsIgnoreCase("P")) {
             makePayment();
         } else if (ledgerOptions.equalsIgnoreCase("R")) {
-            System.out.println();
+            Reports();
         } else {
             System.out.println("Invalid option");
         }
     }
-//For loop when i get back
+
+    private static void Reports() throws IOException {
+
+        System.out.println("1) Month to Date \n2) Previous Month \n3) Year To Date \n4) Previous Year \n5) Search By Vender \n0) back \nH) Home");
+        String reportOption = myscanner.nextLine();
+
+        if (reportOption.equals("1")) {
+            searchByMonth();
+        } else if (reportOption.equals("2")) {
+
+        } else if (reportOption.equals("3")) {
+
+        } else if (reportOption.equals("4")) {
+
+        } else if (reportOption.equals("5")){
+
+        } else if(reportOption.equals("0")){
+
+        } else if (reportOption.equalsIgnoreCase("H")){
+
+        } else{
+            System.out.println("Error occured");
+        }
+
+    }
+
     private static void allPayments() {
         File file = new File("transactions.csv");
         boolean isFirstLine = true;
@@ -160,8 +177,6 @@ public class Main {
             e.printStackTrace();
         }
     }
-
-
     private static void displayAll() {
         File file = new File("transactions.csv");
 
@@ -174,6 +189,50 @@ public class Main {
         } catch (IOException e) {
             System.out.println("An error occurred while reading transactions.");
             e.printStackTrace();
+        }
+    }
+    private static void searchByMonth() {
+        System.out.print("Enter year (YYYY): ");
+        int year = myscanner.nextInt();
+        System.out.print("Enter month (1-12): ");
+        int month = myscanner.nextInt();
+        myscanner.nextLine(); // Clear the scanner buffer
+
+        File file = new File("transactions.csv");
+        List<String> filteredTransactions = new ArrayList<>();
+
+        // Read the file and find matching transactions
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] fields = line.split("\\|");
+
+                // Check if the transaction date matches the specified month and year
+                if (fields.length > 0) {
+                    try {
+                        LocalDate transactionDate = LocalDate.parse(fields[0]);
+                        if (transactionDate.getYear() == year && transactionDate.getMonthValue() == month) {
+                            filteredTransactions.add(line);
+                        }
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Error parsing date: " + fields[0]);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading transactions.");
+            e.printStackTrace();
+            return;
+        }
+
+        // Display the filtered transactions
+        if (filteredTransactions.isEmpty()) {
+            System.out.println("No transactions found for the specified month and year.");
+        } else {
+            System.out.println("Transactions for " + month + "/" + year + ":");
+            for (String transaction : filteredTransactions) {
+                System.out.println(transaction);
+            }
         }
     }
 
@@ -202,12 +261,5 @@ public class Main {
             System.out.println("An error occurred while reading transactions.");
             e.printStackTrace();
         }
-
-
-    }
-
-    public static void sortTransactionsByDate(List<Search> transactions) {
-        transactions.sort((t1, t2) -> t2.getStartDate().compareTo(t1.getStartDate()));
-
     }
 }
