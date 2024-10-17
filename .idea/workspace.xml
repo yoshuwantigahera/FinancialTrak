@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bb054a78-c5e8-4fd2-b401-48c8c0ec0061" name="Changes" comment="added search by by montn method">
+    <list default="true" id="bb054a78-c5e8-4fd2-b401-48c8c0ec0061" name="Changes" comment="added search by previous moonth method">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pluralsight/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pluralsight/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transactions.csv" beforeDir="false" afterPath="$PROJECT_DIR$/transactions.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +135,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729141686221</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="added search by previous moonth method">
+      <option name="closed" value="true" />
+      <created>1729176099326</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1729176099326</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -155,6 +164,7 @@
     <MESSAGE value="changed transcation name and add everything to one file. also displays all enteries now" />
     <MESSAGE value="update my payment method to ask only 2 questions and also display negative amount. Also added a sort by date meethod i'm trying to work on." />
     <MESSAGE value="added search by by montn method" />
-    <option name="LAST_COMMIT_MESSAGE" value="added search by by montn method" />
+    <MESSAGE value="added search by previous moonth method" />
+    <option name="LAST_COMMIT_MESSAGE" value="added search by previous moonth method" />
   </component>
 </project>

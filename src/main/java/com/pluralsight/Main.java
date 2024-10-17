@@ -41,8 +41,6 @@ public class Main {
     }
 
 
-
-
     public static void writeToCSV() {
         File file = new File("transactions.csv");
 
@@ -73,9 +71,9 @@ public class Main {
         //-------------------------------------------------------------------------------------------
         LocalDate todayDate = LocalDate.now();
         LocalTime todayTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS);
-        //-------------------------------------------------------------------------------------------
-
-        String cardinformation = todayDate + "|" + todayTime + "|" + name + "|" + (-payment); //display input that was entered with negative
+        //------------------------------------------------------------------------------------------
+        // display input that was entered with negative
+        String cardinformation = todayDate + "|" + todayTime + "|" + name + "|" + (-payment);
         BufferedWriter cw = new BufferedWriter(new FileWriter("transactions.csv", true));
         cw.newLine();
         cw.write(cardinformation);
@@ -134,20 +132,18 @@ public class Main {
         } else if (reportOption.equals("2")) {
             searchPreviousMonth();
         } else if (reportOption.equals("3")) {
-
+            searchByYear();
         } else if (reportOption.equals("4")) {
             searchPreviousYear();
-
-        } else if (reportOption.equals("5")){
-
-        } else if(reportOption.equals("0")){
-
-        } else if (reportOption.equalsIgnoreCase("H")){
-
-        } else{
+        } else if (reportOption.equals("5")) {
+            Vendor();
+        } else if (reportOption.equals("0")) {
+            Ledger();
+        } else if (reportOption.equalsIgnoreCase("H")) {
+            displayMenu();
+        } else {
             System.out.println("Error occured");
         }
-
     }
 
     private static void allPayments() {
@@ -178,6 +174,7 @@ public class Main {
             e.printStackTrace();
         }
     }
+
     private static void displayAll() {
         File file = new File("transactions.csv");
 
@@ -284,7 +281,6 @@ public class Main {
     }
 
 
-
     private static void allDeposits() {
         File file = new File("transactions.csv");
         boolean isFirstLine = true;
@@ -318,9 +314,9 @@ public class Main {
         LocalDate lastYear = firstDayOfCurrentYear.minusYears(1);
 
         int year = lastYear.getYear();
-        int month = lastYear.getMonthValue();
+//        int month = lastYear.getMonthValue();
 
-        System.out.println("Searching for transactions for " + month + "/" + year + "...");
+        System.out.println("Searching for transactions for " + year + "...");
 
         File file = new File("transactions.csv");
         List<String> filteredTransactions = new ArrayList<>();
@@ -333,7 +329,7 @@ public class Main {
                 if (fields.length > 0) {
                     try {
                         LocalDate transactionDate = LocalDate.parse(fields[0]);
-                        if (transactionDate.getYear() == year && transactionDate.getMonthValue() == month) {
+                        if (transactionDate.getYear() == year) {
                             filteredTransactions.add(line);
                         }
                     } catch (DateTimeParseException e) {
@@ -351,10 +347,75 @@ public class Main {
         if (filteredTransactions.isEmpty()) {
             System.out.println("No transactions found for the previous Year.");
         } else {
-            System.out.println("Transactions for " + month + "/" + year + ":");
+            System.out.println("Transactions for " + year + ":");
             for (String transaction : filteredTransactions) {
                 System.out.println(transaction);
             }
         }
+    }
+
+    private static void searchByYear() throws FileNotFoundException {
+        System.out.print("Enter year (YYYY): ");
+        int year = myscanner.nextInt();
+
+        File file = new File("transactions.csv");
+        List<String> filteredTransactions = new ArrayList<>();
+
+        // Read the file and find matching transactions
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+
+                // Display the filtered transactions
+                if (filteredTransactions.isEmpty()) {
+                    System.out.println("No transactions found for the specified month and year.");
+                } else {
+                    System.out.println("Transactions for " + year + ":");
+                    for (String transaction : filteredTransactions) {
+                        System.out.println(transaction);
+                    }
+                }
+            }
+        }
+    }
+
+    private static void Vendor() throws FileNotFoundException {
+        System.out.print("Enter Vendor Name: ");
+        String vendorName = myscanner.nextLine();
+        myscanner.close();
+
+        File file = new File("transactions.csv");
+        List<String> filteredTransactions = new ArrayList<>();
+
+        // Read the file and find matching transactions
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] field = line.split("\\|");
+
+                if (field.length > 3 && field[3].equalsIgnoreCase(vendorName)) {
+                    filteredTransactions.add(line);
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading transactions.");
+            e.printStackTrace();
+            return;
+        }
+                // Display the filtered transactions
+                if (filteredTransactions.isEmpty()) {
+                  System.out.println("No transactions found for the specified Vendor.");
+               } else {
+                    System.out.println("Vendor " + vendorName + ":");
+                    for (String transaction : filteredTransactions) {
+                        System.out.println(transaction);
+
+
+                    }
+                }
+
     }
 }
