@@ -136,6 +136,7 @@ public class Main {
         } else if (reportOption.equals("3")) {
 
         } else if (reportOption.equals("4")) {
+            searchPreviousYear();
 
         } else if (reportOption.equals("5")){
 
@@ -308,6 +309,52 @@ public class Main {
         } catch (IOException e) {
             System.out.println("An error occurred while reading transactions.");
             e.printStackTrace();
+        }
+    }
+
+    private static void searchPreviousYear() {
+        LocalDate today = LocalDate.now();
+        LocalDate firstDayOfCurrentYear = today.withDayOfYear(1);
+        LocalDate lastYear = firstDayOfCurrentYear.minusYears(1);
+
+        int year = lastYear.getYear();
+        int month = lastYear.getMonthValue();
+
+        System.out.println("Searching for transactions for " + month + "/" + year + "...");
+
+        File file = new File("transactions.csv");
+        List<String> filteredTransactions = new ArrayList<>();
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] fields = line.split("\\|");
+
+                if (fields.length > 0) {
+                    try {
+                        LocalDate transactionDate = LocalDate.parse(fields[0]);
+                        if (transactionDate.getYear() == year && transactionDate.getMonthValue() == month) {
+                            filteredTransactions.add(line);
+                        }
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Error parsing date: " + fields[0]);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading transactions.");
+            e.printStackTrace();
+            return;
+        }
+
+        // Display the results
+        if (filteredTransactions.isEmpty()) {
+            System.out.println("No transactions found for the previous Year.");
+        } else {
+            System.out.println("Transactions for " + month + "/" + year + ":");
+            for (String transaction : filteredTransactions) {
+                System.out.println(transaction);
+            }
         }
     }
 }
