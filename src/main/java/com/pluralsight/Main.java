@@ -1,7 +1,6 @@
 package com.pluralsight;
 import org.w3c.dom.ls.LSOutput;
 import java.io.File;
-
 import java.io.*;
 import java.sql.SQLOutput;
 import java.time.LocalDate;
@@ -15,32 +14,27 @@ public class Main {
     static Scanner myscanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
-
         displayMenu();
-
-
     }
-
-
     public static <Transaction> void displayMenu() throws IOException {
-
         String options;
         System.out.println("Good afternoon what would you like to do?"); //Later will add if time is am print more if it is pm print good afternoon
         System.out.println("D) Add Deposit \nP) Make payment (Debit) \nL) Ledger \nX) Exit");
         options = myscanner.nextLine();
 
         if (options.equalsIgnoreCase("D")) {
+            System.out.println("Make a deposit");
             addDeposit();
         } else if (options.equalsIgnoreCase("P")) {
+            System.out.println("Make a payment");
             makePayment();
         } else if (options.equalsIgnoreCase("L")) {
+            System.out.println("Welcome to the ledger page");
             Ledger();
         } else if (options.equalsIgnoreCase("X")) {
             System.out.println("Exiting... Have a great day");
         }
     }
-
-
     public static void writeToCSV() {
         File file = new File("transactions.csv");
 
@@ -60,8 +54,6 @@ public class Main {
             e.printStackTrace();
         }
     }
-
-
     public static void makePayment() throws IOException {
         System.out.println("How much of your balance would you like to pay now: ");
         double payment = myscanner.nextDouble();
@@ -80,7 +72,6 @@ public class Main {
         cw.newLine();
         cw.close();
     }
-
     public static void addDeposit() throws IOException {
         System.out.println("Enter amount you would like to deposit: ");
         double deposit = myscanner.nextDouble();
@@ -94,34 +85,33 @@ public class Main {
         LocalDate todayDate = LocalDate.now();
         LocalTime todayTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS);
         //-----------------------------------------------------------------------------------------------
-        String transcation = todayDate + "|" + todayTime + "|" + description + "|" + name + "|" + deposit;
+        String transaction = String.format("%s|%s|%s|%s|%f", todayDate, todayTime, description, name, deposit);
+
+//        String transcation = todayDate + "|" + todayTime + "|" + description + "|" + name + "|" + deposit;
         //-----------------------------------------------------------------------------------------------
         BufferedWriter cw = new BufferedWriter(new FileWriter("transactions.csv", true)); //Going over file to apend string into the file
-        cw.write(transcation);
+        cw.write(transaction);
         //Close it because the program is going to think i am still writing stuff basically waiting for it to be done. in while loop until closed.
         cw.close();
-
+        //Got some help from osmig
     }
-
     public static void Ledger() throws IOException {
         String ledgerOptions;
-        System.out.println("A) All \nD) Deposit \nP) Payments \nR) Reports");
+        System.out.println("A) Display all entry \nD) Deposits \nP) Payments \nR) Reports");
         ledgerOptions = myscanner.nextLine();
 
         if (ledgerOptions.equalsIgnoreCase("A")) {
-
+            displayAll();
         } else if (ledgerOptions.equalsIgnoreCase("D")) {
             allDeposits();
-//            sortTransactionsByDate();
         } else if (ledgerOptions.equalsIgnoreCase("P")) {
-            makePayment();
+            allPayments();
         } else if (ledgerOptions.equalsIgnoreCase("R")) {
             Reports();
         } else {
             System.out.println("Invalid option");
         }
     }
-
     private static void Reports() throws IOException {
 
         System.out.println("1) Month to Date \n2) Previous Month \n3) Year To Date \n4) Previous Year \n5) Search By Vender \n0) back \nH) Home");
@@ -145,7 +135,6 @@ public class Main {
             System.out.println("Error occured");
         }
     }
-
     private static void allPayments() {
         File file = new File("transactions.csv");
         boolean isFirstLine = true;
@@ -174,7 +163,6 @@ public class Main {
             e.printStackTrace();
         }
     }
-
     private static void displayAll() {
         File file = new File("transactions.csv");
 
@@ -189,7 +177,6 @@ public class Main {
             e.printStackTrace();
         }
     }
-
     private static void searchByMonth() {
         System.out.print("Enter year (YYYY): ");
         int year = myscanner.nextInt();
@@ -198,6 +185,7 @@ public class Main {
         myscanner.nextLine(); // Clear the scanner buffer
 
         File file = new File("transactions.csv");
+        //An empty list called filteredTrans is made/called to hold any transactions that match the vendor name
         List<String> filteredTransactions = new ArrayList<>();
 
         // Read the file and find matching transactions
@@ -222,7 +210,6 @@ public class Main {
             e.printStackTrace();
             return;
         }
-
         // Display the filtered transactions
         if (filteredTransactions.isEmpty()) {
             System.out.println("No transactions found for the specified month and year.");
@@ -233,7 +220,6 @@ public class Main {
             }
         }
     }
-
     private static void searchPreviousMonth() {
         LocalDate today = LocalDate.now();
         LocalDate firstDayOfCurrentMonth = today.withDayOfMonth(1);
@@ -254,7 +240,7 @@ public class Main {
 
                 if (fields.length > 0) {
                     try {
-                        LocalDate transactionDate = LocalDate.parse(fields[0]);
+                        LocalDate transactionDate = LocalDate.parse(fields[0]);//chatgpt assisted
                         if (transactionDate.getYear() == year && transactionDate.getMonthValue() == month) {
                             filteredTransactions.add(line);
                         }
@@ -265,10 +251,9 @@ public class Main {
             }
         } catch (IOException e) {
             System.out.println("An error occurred while reading transactions.");
-            e.printStackTrace();
+            e.printStackTrace(); //chat gpt
             return;
         }
-
         // Display the results
         if (filteredTransactions.isEmpty()) {
             System.out.println("No transactions found for the previous month.");
@@ -279,8 +264,6 @@ public class Main {
             }
         }
     }
-
-
     private static void allDeposits() {
         File file = new File("transactions.csv");
         boolean isFirstLine = true;
@@ -288,15 +271,19 @@ public class Main {
             System.out.println("Deposits:");
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
+                // Check if this is the first line we are looking at - skipping header
                 if (isFirstLine) {
+                    // If it is the first line set isFirstLine to false
+                    // This way, we won't run this block of code again for the next lines
                     isFirstLine = false;
+                    // Skip the rest of this loop and go to the next line
                     continue;
                 }
                 String[] fields = line.split("\\|");
                 // Split by the delimiter
                 if (fields.length > 4) { // Check if there are enough fields
-                    String amountInString = fields[fields.length - 1]; // Last field is the amount
-                    double amount = Double.parseDouble(amountInString);
+                    String amountInString = fields[fields.length - 1]; // Last field is the amount - (bit of chatgpt assistance)
+                    double amount = Double.parseDouble(amountInString); //taking the number and putting it in String format
                     if (amount > 0) { // Check if the amount is a deposit
                         System.out.println(line);
                     }
@@ -307,14 +294,12 @@ public class Main {
             e.printStackTrace();
         }
     }
-
     private static void searchPreviousYear() {
         LocalDate today = LocalDate.now();
         LocalDate firstDayOfCurrentYear = today.withDayOfYear(1);
         LocalDate lastYear = firstDayOfCurrentYear.minusYears(1);
 
         int year = lastYear.getYear();
-//        int month = lastYear.getMonthValue();
 
         System.out.println("Searching for transactions for " + year + "...");
 
@@ -322,17 +307,24 @@ public class Main {
         List<String> filteredTransactions = new ArrayList<>();
 
         try (Scanner scanner = new Scanner(file)) {
+            // Loop while there are more lines in the file
             while (scanner.hasNextLine()) {
+                // Read the next line from the file
                 String line = scanner.nextLine();
+                // Split the line into an array of fields using the pipe '|' as the separator
                 String[] fields = line.split("\\|");
-
+                // Check if the fields array has at least one element making sure there's at least data inside
                 if (fields.length > 0) {
+                    // Try to parse the first element as a LocalDate
                     try {
-                        LocalDate transactionDate = LocalDate.parse(fields[0]);
+                        LocalDate transactionDate = LocalDate.parse(fields[0]); // Assume the first field is the date
+                        // Check if the year of the transaction date matches the specified year.
                         if (transactionDate.getYear() == year) {
+                            // If it matches add the whole line (transaction) to the filteredTrans list
                             filteredTransactions.add(line);
                         }
                     } catch (DateTimeParseException e) {
+                        // If there's an error parsing the date, print an error message with the reason/date.
                         System.out.println("Error parsing date: " + fields[0]);
                     }
                 }
@@ -342,7 +334,6 @@ public class Main {
             e.printStackTrace();
             return;
         }
-
         // Display the results
         if (filteredTransactions.isEmpty()) {
             System.out.println("No transactions found for the previous Year.");
@@ -353,7 +344,6 @@ public class Main {
             }
         }
     }
-
     private static void searchByYear() throws FileNotFoundException {
         System.out.print("Enter year (YYYY): ");
         int year = myscanner.nextInt();
@@ -379,7 +369,6 @@ public class Main {
             }
         }
     }
-
     private static void Vendor() throws FileNotFoundException {
         System.out.print("Enter Vendor Name: ");
         String vendorName = myscanner.nextLine();
@@ -395,7 +384,9 @@ public class Main {
                 String line = scanner.nextLine();
                 String[] field = line.split("\\|");
 
+                //The fourth element (index 3) of fields, which should correspond to the vendor name in th file
                 if (field.length > 3 && field[3].equalsIgnoreCase(vendorName)) {
+                    //If both conditions are met the current line (transaction) is added to the list when called
                     filteredTransactions.add(line);
                 }
             }
@@ -405,17 +396,15 @@ public class Main {
             e.printStackTrace();
             return;
         }
-                // Display the filtered transactions
-                if (filteredTransactions.isEmpty()) {
-                  System.out.println("No transactions found for the specified Vendor.");
-               } else {
-                    System.out.println("Vendor " + vendorName + ":");
-                    for (String transaction : filteredTransactions) {
-                        System.out.println(transaction);
-
-
-                    }
-                }
-
+        // Display the filtered transactions
+        if (filteredTransactions.isEmpty()) {
+            System.out.println("No transactions found for the specified Vendor.");
+        } else {
+            System.out.println("Vendor " + vendorName + ":");
+            // loops through the filteredTrans list and prints each transaction
+            for (String transaction : filteredTransactions) {
+                System.out.println(transaction);
+            }
+        }
     }
 }
