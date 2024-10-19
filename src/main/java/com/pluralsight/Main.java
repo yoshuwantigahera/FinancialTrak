@@ -18,21 +18,26 @@ public class Main {
     }
     public static <Transaction> void displayMenu() throws IOException {
         String options;
-        System.out.println("Good afternoon what would you like to do?"); //Later will add if time is am print more if it is pm print good afternoon
+        System.out.println("Hello there, what would you like to do today?"); //Later will add if time is am print more if it is pm print good afternoon
         System.out.println("D) Add Deposit \nP) Make payment (Debit) \nL) Ledger \nX) Exit");
         options = myscanner.nextLine();
 
         if (options.equalsIgnoreCase("D")) {
             System.out.println("Make a deposit");
             addDeposit();
+            displayMenu();
         } else if (options.equalsIgnoreCase("P")) {
             System.out.println("Make a payment");
             makePayment();
+            displayMenu();
         } else if (options.equalsIgnoreCase("L")) {
             System.out.println("Welcome to the ledger page");
             Ledger();
         } else if (options.equalsIgnoreCase("X")) {
             System.out.println("Exiting... Have a great day");
+        }else {
+            System.out.println("Error occured, try again.");
+            displayMenu();
         }
     }
     public static void writeToCSV() {
@@ -61,16 +66,18 @@ public class Main {
         System.out.println("Enter Name of company: ");
         String name = myscanner.nextLine();
         //-------------------------------------------------------------------------------------------
+        String trans = "Payment";
         LocalDate todayDate = LocalDate.now();
         LocalTime todayTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS);
         //------------------------------------------------------------------------------------------
         // display input that was entered with negative
-        String cardinformation = todayDate + "|" + todayTime + "|" + name + "|" + (-payment);
+        String cardinformation = trans + "|" + todayDate + "|" + todayTime + "|" + name + "|" + (-payment);
         BufferedWriter cw = new BufferedWriter(new FileWriter("transactions.csv", true));
         cw.newLine();
         cw.write(cardinformation);
         cw.newLine();
         cw.close();
+        System.out.println("Payment of $" + payment + "successful");
     }
     public static void addDeposit() throws IOException {
         System.out.println("Enter amount you would like to deposit: ");
@@ -78,22 +85,22 @@ public class Main {
         myscanner.nextLine();
         System.out.println("Description: ");
         String description = myscanner.nextLine();
-        System.out.println("Name: ");
-        String name = myscanner.nextLine();
+        System.out.println("Vendor: ");
+        String vendor = myscanner.nextLine();
         //-----------------------------------------------------------------------------------------------
 
+        String type = "Deposit";
         LocalDate todayDate = LocalDate.now();
-        LocalTime todayTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS);
+        LocalTime todayTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS); // help from osmig
         //-----------------------------------------------------------------------------------------------
-        String transaction = String.format("%s|%s|%s|%s|%f", todayDate, todayTime, description, name, deposit);
+        String transaction = String.format( "%s|%s|%s|%s|%f", todayDate, todayTime, description, vendor, deposit);
 
-//        String transcation = todayDate + "|" + todayTime + "|" + description + "|" + name + "|" + deposit;
         //-----------------------------------------------------------------------------------------------
         BufferedWriter cw = new BufferedWriter(new FileWriter("transactions.csv", true)); //Going over file to apend string into the file
         cw.write(transaction);
         //Close it because the program is going to think i am still writing stuff basically waiting for it to be done. in while loop until closed.
         cw.close();
-        //Got some help from osmig
+        System.out.println("Deposit of $" + deposit + " successful!");
     }
     public static void Ledger() throws IOException {
         String ledgerOptions;
@@ -196,7 +203,7 @@ public class Main {
 
                 if (fields.length > 0) {
                     try {
-                        LocalDate transactionDate = LocalDate.parse(fields[0]);
+                        LocalDate transactionDate = LocalDate.parse(fields[0]); //Being converted
                         if (transactionDate.getYear() == year && transactionDate.getMonthValue() == month) {
                             filteredTransactions.add(line);
                         }
